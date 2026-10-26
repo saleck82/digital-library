@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14243a">
+<title>مكتبتي الرقمية | Digital Library</title>
+<style>
+:root{--navy:#14243a;--navy2:#203953;--gold:#d8b66d;--paper:#f5f3ee;--ink:#172235;--muted:#64748b;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}
+header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:white;padding:22px max(16px,calc((100% - 1100px)/2))}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:13px;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-size:24px}
+h1{font-size:clamp(1.25rem,4vw,2rem);margin:0}.sub{color:#dbe4ee;margin:5px 0 0;font-size:.95rem}
+select,input,button{font:inherit;border-radius:10px;padding:10px 12px;border:1px solid #d5dce5}select{background:white;color:var(--ink)}button{cursor:pointer;background:var(--gold);color:#18283b;border:0;font-weight:700}button.secondary{background:white;border:1px solid #cbd5e1;color:var(--ink)}
+main{max-width:1100px;margin:auto;padding:20px 16px 48px}.hero{background:white;border:1px solid #e4e7ec;border-radius:20px;padding:22px;display:grid;gap:12px}.hero h2{margin:0;font-size:1.45rem}.hero p{margin:0;color:var(--muted)}.search{display:flex;gap:8px;flex-wrap:wrap}.search input{flex:1;min-width:180px}
+.filters{display:flex;gap:8px;overflow:auto;padding:18px 0}.filter{white-space:nowrap;background:white;border:1px solid #d9dee7;color:var(--ink)}.filter.active{background:var(--navy);color:white;border-color:var(--navy)}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 14px}.section-head h2{margin:0}.count{font-size:.9rem;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:white;border:1px solid #e2e7ed;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}.cover{height:125px;background:linear-gradient(135deg,#203953,#54718d);color:white;display:grid;place-items:center;font-size:42px}.card-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}.tag{font-size:.78rem;color:#75571b;background:#f8efd9;padding:4px 8px;border-radius:99px;align-self:flex-start}.card h3{font-size:1.05rem;margin:0}.desc{font-size:.9rem;color:var(--muted);margin:0;line-height:1.55}.meta{font-size:.8rem;color:var(--muted)}.card-actions{display:flex;gap:8px;margin-top:auto;padding-top:5px}.card-actions button{flex:1;font-size:.9rem}.empty{background:white;padding:28px;text-align:center;border-radius:16px;color:var(--muted)}footer{border-top:1px solid #e2e8f0;padding:22px 16px;text-align:center;color:var(--muted);font-size:.85rem}.notice{margin:18px 0;padding:13px 15px;border-radius:12px;background:#fff8e7;border:1px solid #f0dfae;color:#624c1b;font-size:.9rem}
+.modal{position:fixed;inset:0;background:#07111dcc;display:none;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.dialog{width:min(760px,100%);max-height:90vh;overflow:auto;background:white;border-radius:18px;padding:18px}.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.dialog h2{margin:0}.viewer{margin-top:14px}.viewer iframe,.viewer video,.viewer audio{width:100%}.viewer iframe{height:65vh;border:0}.viewer video{max-height:65vh;background:#111}.close{background:#e8edf3}
+@media(min-width:700px){.hero{grid-template-columns:1.2fr 1fr;align-items:center}.hero-copy{padding-inline-end:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="brand"><div class="logo">▤</div><div><h1 id="brand">مكتبتي الرقمية</h1><p class="sub" id="tagline">اقرأ · استمع · شاهد · اكتشف</p></div></div>
+    <select id="language" aria-label="Language">
+      <option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option>
+    </select>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy"><h2 id="heroTitle">المعرفة في مكان واحد</h2><p id="heroText">اكتشف الكتب والصوتيات والفيديوهات والصور في مكتبة رقمية واحدة.</p></div>
+    <div class="search"><input id="search" type="search" placeholder="ابحث عن عنوان أو مؤلف أو موضوع"><button id="searchBtn">بحث</button></div>
+  </section>
+  <nav class="filters" id="filters" aria-label="Content categories"></nav>
+  <div class="section-head"><h2 id="sectionTitle">استكشف المكتبة</h2><span class="count" id="count"></span></div>
+  <section class="grid" id="libraryGrid"></section>
+  <div class="notice" id="notice">هذه نسخة تجريبية بمواد توضيحية. أضف فقط ملفات وروابط تملكها أو لديك إذن باستخدامها.</div>
+</main>
+<footer id="footer">مكتبة رقمية تجريبية · أضف المحتوى الحقيقي قبل النشر</footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="dialog"><div class="dialog-head"><h2 id="modalTitle"></h2><button class="close" id="closeModal">إغلاق ✕</button></div><div class="viewer" id="viewer"></div><p class="meta" id="viewerNote"></p></div>
+</div>
+<script>
+const translations={
+ ar:{brand:"مكتبتي الرقمية",tagline:"اقرأ · استمع · شاهد · اكتشف",heroTitle:"المعرفة في مكان واحد",heroText:"اكتشف الكتب والصوتيات والفيديوهات والصور في مكتبة رقمية واحدة.",search:"ابحث عن عنوان أو مؤلف أو موضوع",searchBtn:"بحث",all:"الكل",book:"كتب",audio:"صوتيات",video:"فيديو",image:"صور",sectionTitle:"استكشف المكتبة",items:"مادة",open:"فتح",details:"تفاصيل",notice:"هذه نسخة تجريبية بمواد توضيحية. أضف فقط ملفات وروابط تملكها أو لديك إذن باستخدامها.",footer:"مكتبة رقمية تجريبية · أضف المحتوى الحقيقي قبل النشر",close:"إغلاق ✕",noResults:"لا توجد نتائج. جرّب كلمة بحث أخرى.",sample:"مثال تجريبي",author:"المؤلف",description:"الوصف",noLink:"لم يُضف رابط لهذا العنصر بعد.",pdfNote:"أضف رابط PDF مباشرًا تملك حق نشره أو مشاركته.",mediaNote:"أضف رابطًا مباشرًا أو تضمينًا مسموحًا من مصدر المحتوى."},
+ fr:{brand:"Ma bibliothèque numérique",tagline:"Lire · Écouter · Regarder · Découvrir",heroTitle:"Le savoir en un seul endroit",heroText:"Découvrez livres, audio, vidéos et images dans une seule bibliothèque numérique.",search:"Rechercher un titre, un auteur ou un sujet",searchBtn:"Rechercher",all:"Tout",book:"Livres",audio:"Audio",video:"Vidéos",image:"Images",sectionTitle:"Explorer la bibliothèque",items:"éléments",open:"Ouvrir",details:"Détails",notice:"Ceci est une démo avec des exemples. Ajoutez uniquement des fichiers et liens que vous possédez ou êtes autorisé à utiliser.",footer:"Bibliothèque numérique de démonstration · Ajoutez le contenu avant publication",close:"Fermer ✕",noResults:"Aucun résultat. Essayez un autre terme.",sample:"Exemple",author:"Auteur",description:"Description",noLink:"Aucun lien n'a encore été ajouté.",pdfNote:"Ajoutez un lien PDF direct que vous avez le droit de partager.",mediaNote:"Ajoutez un lien direct ou une intégration autorisée."},
+ en:{brand:"My Digital Library",tagline:"Read · Listen · Watch · Discover",heroTitle:"Knowledge in one place",heroText:"Explore books, audio, videos and images in one digital library.",search:"Search by title, author or topic",searchBtn:"Search",all:"All",book:"Books",audio:"Audio",video:"Video",image:"Images",sectionTitle:"Explore the library",items:"items",open:"Open",details:"Details",notice:"This is a demo with sample entries. Only add files and links you own or are authorized to use.",footer:"Digital library demo · Add your real content before publishing",close:"Close ✕",noResults:"No results. Try another search term.",sample:"Demo sample",author:"Author",description:"Description",noLink:"No link has been added for this item yet.",pdfNote:"Add a direct PDF link you have the right to publish or share.",mediaNote:"Add a direct link or an authorized embed."}
+};
+const categories=["all","book","audio","video","image"];
+// Replace the sample entries below with content you own, public-domain material, or properly licensed media.
+const items=[
+{id:1,type:"book",icon:"📚",title:{ar:"مقدمة إلى العلوم",fr:"Introduction aux sciences",en:"Introduction to Science"},author:{ar:"فريق المكتبة",fr:"Équipe de la bibliothèque",en:"Library team"},description:{ar:"مثال توضيحي لسجل كتاب إلكتروني. أضف وصفًا ورابط PDF مرخصًا.",fr:"Exemple de fiche de livre. Ajoutez une description et un PDF autorisé.",en:"Sample ebook record. Add a description and an authorized PDF link."},url:""},
+{id:2,type:"audio",icon:"🎧",title:{ar:"درس صوتي تجريبي",fr:"Exemple audio",en:"Sample audio lesson"},author:{ar:"فريق المكتبة",fr:"Équipe de la bibliothèque",en:"Library team"},description:{ar:"أضف تسجيلًا صوتيًا تملكه أو رابطًا يسمح صاحبه بمشاركته.",fr:"Ajoutez un enregistrement que vous possédez ou êtes autorisé à partager.",en:"Add an audio file you own or have permission to share."},url:""},
+{id:3,type:"video",icon:"🎬",title:{ar:"درس مرئي تجريبي",fr:"Exemple de vidéo",en:"Sample video lesson"},author:{ar:"فريق المكتبة",fr:"Équipe de la bibliothèque",en:"Library team"},description:{ar:"أضف فيديو تعليميًا خاصًا بك أو تضمينًا يسمح به مصدره.",fr:"Ajoutez votre vidéo éducative ou un intégration autorisée.",en:"Add your own educational video or an embed permitted by its source."},url:""},
+{id:4,type:"image",icon:"🖼️",title:{ar:"معرض صور تجريبي",fr:"Galerie d’images",en:"Sample image gallery"},author:{ar:"فريق المكتبة",fr:"Équipe de la bibliothèque",en:"Library team"},description:{ar:"أضف صورًا أصلية أو مرخصة، مع عنوان ومصدر ووصف بديل.",fr:"Ajoutez des images originales ou sous licence, avec source et texte alternatif.",en:"Add original or licensed images with source and alt text."},url:""}
+];
+let lang="ar",active="all";
+const $=id=>document.getElementById(id);
+function t(key){return translations[lang][key]||key}
+function localized(obj){return obj[lang]||obj.en||""}
+function render(){
+ document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+ $("brand").textContent=t("brand");$("tagline").textContent=t("tagline");$("heroTitle").textContent=t("heroTitle");$("heroText").textContent=t("heroText");
+ $("search").placeholder=t("search");$("searchBtn").textContent=t("searchBtn");$("sectionTitle").textContent=t("sectionTitle");$("notice").textContent=t("notice");$("footer").textContent=t("footer");$("closeModal").textContent=t("close");
+ $("filters").innerHTML=categories.map(c=>`<button class="filter ${active===c?"active":""}" data-cat="${c}">${t(c)}</button>`).join("");
+ document.querySelectorAll("[data-cat]").forEach(b=>b.addEventListener("click",()=>{active=b.dataset.cat;render()}));
+ const q=$("search").value.trim().toLocaleLowerCase();
+ const shown=items.filter(x=>(active==="all"||x.type===active)&&[localized(x.title),localized(x.author),localized(x.description),x.type].join(" ").toLocaleLowerCase().includes(q));
+ $("count").textContent=`${shown.length} ${t("items")}`;
+ $("libraryGrid").innerHTML=shown.length?shown.map(x=>`<article class="card"><div class="cover" aria-hidden="true">${x.icon}</div><div class="card-body"><span class="tag">${t(x.type)}</span><h3>${escapeHtml(localized(x.title))}</h3><span class="meta">${t("author")}: ${escapeHtml(localized(x.author))}</span><p class="desc">${escapeHtml(localized(x.description))}</p><div class="card-actions"><button data-open="${x.id}">${t("open")}</button><button class="secondary" data-info="${x.id}">${t("details")}</button></div></div></article>`).join(""):`<div class="empty">${t("noResults")}</div>`;
+ document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openItem(+b.dataset.open,false)));
+ document.querySelectorAll("[data-info]").forEach(b=>b.addEventListener("click",()=>openItem(+b.dataset.info,true)));
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function openItem(id,details){const item=items.find(x=>x.id===id);$("modalTitle").textContent=localized(item.title);$("viewer").innerHTML="";
+ if(details){$("viewer").innerHTML=`<p><strong>${t("author")}:</strong> ${escapeHtml(localized(item.author))}</p><p><strong>${t("description")}:</strong> ${escapeHtml(localized(item.description))}</p><p class="meta">${t("sample")}</p>`}
+ else if(!item.url){$("viewer").innerHTML=`<div class="empty">${t("noLink")}<br><br>${item.type==="book"?t("pdfNote"):t("mediaNote")}</div>`}
+ else if(item.type==="book"){$("viewer").innerHTML=`<iframe title="${escapeHtml(localized(item.title))}" src="${escapeHtml(item.url)}"></iframe>`}
+ else if(item.type==="audio"){$("viewer").innerHTML=`<audio controls preload="metadata" src="${escapeHtml(item.url)}"></audio>`}
+ else if(item.type==="video"){$("viewer").innerHTML=`<video controls playsinline preload="metadata" src="${escapeHtml(item.url)}"></video>`}
+ else {$("viewer").innerHTML=`<img alt="${escapeHtml(localized(item.title))}" src="${escapeHtml(item.url)}" style="max-width:100%;height:auto;border-radius:12px">`}
+ $("viewerNote").textContent=details?"":(item.url?t("sample"):t("noLink"));$("modal").classList.add("open");
+}
+$("language").addEventListener("change",e=>{lang=e.target.value;render()});
+$("searchBtn").addEventListener("click",render);$("search").addEventListener("input",render);
+$("closeModal").addEventListener("click",()=>$("modal").classList.remove("open"));
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("open")});
+render();
+</script>
+</body>
+</html>
